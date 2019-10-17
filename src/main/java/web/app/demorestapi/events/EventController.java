@@ -1,5 +1,6 @@
 package web.app.demorestapi.events;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,13 @@ public class EventController {
     @Autowired
     EventRepository eventRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     @PostMapping
-    public ResponseEntity CreateEvent(@RequestBody Event event) {
+    public ResponseEntity CreateEvent(@RequestBody EventDto eventDto) {
+
+        Event event = modelMapper.map(eventDto, Event.class);
 
         Event newEvent = eventRepository.save(event);
         URI createdUri = linkTo(EventController.class).slash(newEvent.getId()).toUri();
