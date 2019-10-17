@@ -36,9 +36,9 @@ public class EventControllerTests {
                 .name("spring")
                 .description("Rest API")
                 .beginEnrollmentDateTime(LocalDateTime.of(2018,11,23,11,40))
-                .closeEnrollmentDateTime(LocalDateTime.of(2018,11,23,11,30))
-                .beginEventDateTime(LocalDateTime.of(2018,11,23,11,20))
-                .endEventDateTime(LocalDateTime.of(2018,11,23,11,10))
+                .closeEnrollmentDateTime(LocalDateTime.of(2018,11,24,11,30))
+                .beginEventDateTime(LocalDateTime.of(2018,11,25,11,20))
+                .endEventDateTime(LocalDateTime.of(2018,11,26,11,10))
                 .basePrice(500)
                 .maxPrice(1000)
                 .limitOfEnrollment(10)
@@ -66,9 +66,9 @@ public class EventControllerTests {
                 .name("spring")
                 .description("Rest API")
                 .beginEnrollmentDateTime(LocalDateTime.of(2018,11,23,11,40))
-                .closeEnrollmentDateTime(LocalDateTime.of(2018,11,23,11,30))
-                .beginEventDateTime(LocalDateTime.of(2018,11,23,11,20))
-                .endEventDateTime(LocalDateTime.of(2018,11,23,11,10))
+                .closeEnrollmentDateTime(LocalDateTime.of(2018,11,24,11,30))
+                .beginEventDateTime(LocalDateTime.of(2018,11,25,11,20))
+                .endEventDateTime(LocalDateTime.of(2018,11,26,11,10))
                 .basePrice(500)
                 .maxPrice(1000)
                 .limitOfEnrollment(10)
@@ -89,6 +89,27 @@ public class EventControllerTests {
     @Test
     public void createEvent_Bad_Request_Empty_Input() throws Exception {
         EventDto eventDto = EventDto.builder().build();
+
+        mockMvc.perform(post("/api/events")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(eventDto)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void createEvent_Bad_Request_Wrong_Input() throws Exception {
+        EventDto eventDto = EventDto.builder()
+                .name("spring")
+                .description("Rest API")
+                .beginEnrollmentDateTime(LocalDateTime.of(2018,11,26,11,10))
+                .closeEnrollmentDateTime(LocalDateTime.of(2018,11,24,11,30))
+                .beginEventDateTime(LocalDateTime.of(2018,11,28,11,10))
+                .endEventDateTime(LocalDateTime.of(2018,11,26,11,30))
+                .basePrice(500)
+                .maxPrice(100)
+                .limitOfEnrollment(10)
+                .location("압구정 4번출구로 다 모여라")
+                .build();
 
         mockMvc.perform(post("/api/events")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
