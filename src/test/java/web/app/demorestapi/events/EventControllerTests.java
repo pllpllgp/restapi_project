@@ -60,7 +60,7 @@ public class EventControllerTests {
     }
 
     @Test
-    public void errorEvent() throws Exception {
+    public void createEvent_Bad_Request() throws Exception {
         Event event = Event.builder()
                 .id(100)
                 .name("spring")
@@ -83,6 +83,16 @@ public class EventControllerTests {
                 .accept(MediaTypes.HAL_JSON)
                 .content(objectMapper.writeValueAsBytes(event)))
                 .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void createEvent_Bad_Request_Empty_Input() throws Exception {
+        EventDto eventDto = EventDto.builder().build();
+
+        mockMvc.perform(post("/api/events")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(eventDto)))
                 .andExpect(status().isBadRequest());
     }
 
